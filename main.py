@@ -37,7 +37,8 @@ def table_creation():
         print(i)
 
 def move_available(m):
-    a
+    def move_conversion():
+        print()
 
 def player_turn():
     a = 2
