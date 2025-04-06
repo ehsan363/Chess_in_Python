@@ -40,19 +40,25 @@ def move_available(m):
     a
 
 def player_turn():
-    a = -2
+    a = 2
     while a!=0  or a!=1:
-        if a/2 == int(a/2): turn = 'White'
-        if a/2 != int(a/2): turn = 'black'
 
+        print(a/2 == int(a/2))
+        print(a/2 != int(a/2))
+
+        if a/2 == int(a/2):
+            print('white',a)
+            turn = 'white'
+        elif a/2 != int(a/2):
+            print('black',a)
+            turn = 'black'
+        a+=1
         if turn == 'white':
             print('white turn')
-            a+=1
-            break
-        if turn == 'black':
+
+        elif turn == 'black':
             print('black turn')
-            a+=1
-            break
+
 
     if a==0:
         print('White Won!!!')
