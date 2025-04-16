@@ -1,71 +1,68 @@
-def table_creation():
-    table = []
-    for i in range(8):
-        table.append([0,0,0,0,0,0,0,0])
+table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
+         ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
+         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
+         ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
+chance = 'white'
+one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-    table[0][0] = 'br'
-    table[0][1] = 'bh'
-    table[0][2] = 'bbr'
-    table[0][3] = 'bq'
-    table[0][4] = 'bk'
-    table[0][5] = 'bbl'
-    table[0][6] = 'bh'
-    table[0][7] = 'br'
 
-    table[7][0] = 'wr'
-    table[7][1] = 'wh'
-    table[7][2] = 'wbr'
-    table[7][3] = 'wq'
-    table[7][4] = 'wk'
-    table[7][5] = 'wbl'
-    table[7][6] = 'wh'
-    table[7][7] = 'wr'
+def change_changer(ch):
+    if ch == 'white':
+        global change
+        change = 'black'
+    elif ch == 'black':
+        change = 'white'
 
-    for i in range(2):
-        if i == 0:
-            pc = 'w'
-            pcn = 6
-        if i == 1:
-            pc = 'b'
-            pcn = 1
-        if i == 2: break
 
-        for j in range(8):
-            table[pcn][j] = pc+'p'+str(j)
+pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
+       ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
+       ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
+       ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
 
-    for i in table:
-        print(i)
 
-def move_available(m):
-    def move_conversion():
+def valid_pos(chance):
+    if chance == 'white':
+        for i in range(len(table)):
+            for j in range(len(table[i])):
+
+                if table[i][j][0] == 'w':
+                    if table[i][j][1] == 'p':
+                        for piece in range(len(pos)):
+                            if pos[piece][0] == table[i][j]:
+                                if one[int(table[i][j][2]) + 8] == 1 and table[i - 2][j] == '0':
+                                    pos[piece].append((j, i - 2))
+                                    one[int(table[i][j][2]) + 8] = 0
+                                if table[i - 1][j] == '0':
+                                    pos[piece].append((j, i - 1))
+                                if j != 0:
+                                    if table[i - 1][j - 1][0] == 'b':
+                                        pos[piece].append((j - 1, i - 1))
+                                if j != 7:
+                                    if table[i - 1][j - 1][0] == 'b':
+                                        pos[piece].append((j + 1, i - 1))
+
+
+
+
+
+
+
+
+    elif chance == 'black':
         print()
 
-def player_turn():
-    a = 2
-    while a!=0  or a!=1:
-
-        print(a/2 == int(a/2))
-        print(a/2 != int(a/2))
-
-        if a/2 == int(a/2):
-            print('white',a)
-            turn = 'white'
-        elif a/2 != int(a/2):
-            print('black',a)
-            turn = 'black'
-        a+=1
-        if turn == 'white':
-            print('white turn')
-
-        elif turn == 'black':
-            print('black turn')
+    print(pos)
+    print('####################################')
+    cm = 0
+    for i in pos:
+        if len(i) != 1:
+            cm += (len(i) - 1)
+            print(i)
+    print(cm)
 
 
-    if a==0:
-        print('White Won!!!')
-    if a==-1:
-        print('Black Won!!!')
-    else:
-        print('Something went WRONG!!!')
-        print('currently a =',a)
-player_turn()
+valid_pos(chance)

@@ -1,5 +1,6 @@
 import pygame
 import sys
+import valid as main
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
@@ -34,6 +35,7 @@ covering_text = playername_font.render('Name', True, (220, 220, 220))
 grid_size = 102
 rows, cols = 8, 8
 valid_pos = [(x, y) for x in range(cols) for y in range(rows)]
+chance = 'white'
 
 board_x, board_y = 560, 200
 
@@ -99,14 +101,8 @@ black_piece = [
     ['pawn_5', (4, 6)], ['pawn_6', (5, 6)], ['pawn_7', (6, 6)], ['pawn_8', (7, 6)]
 ]
 
-white_occ = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-             (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
-black_occ = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
-             (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
 
 state = 'dashboard'
-
-
 def dashboard():
     screen.blit(dashboard_img, (0, 0))
     pygame.draw.rect(screen, 'GREEN', start_button, border_radius=15)
@@ -194,22 +190,18 @@ class Piece:
 
         for i in range(len(white_piece)):
             if self.pos == white_piece[i][1]:
-                if new_grid_pos in valid_pos and new_grid_pos not in white_occ:
-                    white_occ.remove(self.pos)
-                    white_occ.append(new_grid_pos)
+                if new_grid_pos in valid_pos:
                     white_piece[i][1] = new_grid_pos
                     self.pos = new_grid_pos
                     return
 
         for i in range(len(black_piece)):
             if self.pos == black_piece[i][1]:
-                if new_grid_pos in valid_pos and new_grid_pos not in black_occ:
-                    black_occ.remove(self.pos)
-                    black_occ.append(new_grid_pos)
+                if new_grid_pos in valid_pos:
                     black_piece[i][1] = new_grid_pos
                     self.pos = new_grid_pos
                     return
-
+        main.change_changer(chance)
 
 pieces = [
     Piece((0, 0), pieces_img["wl_rook"]),
@@ -296,12 +288,6 @@ while run:
                         pieces.append(piece)
                         break
             elif event.type == pygame.MOUSEBUTTONUP:
-
-                print(white_occ)
-                print()
-                print(black_occ)
-                print('--------------------------------------------------------------------------------------------------------------------------------')
-
                 for piece in pieces:
                     if piece.dragging:
                         piece.handle_mouse_up()
