@@ -306,6 +306,10 @@ def valid_pos(chance):
     for i in pos:
         if len(i) != 1:
             cm += (len(i) - 1)
+            if i[0][2] == 'r':
+                print('⚠️',i,'⚠️')
+            else:
+                print(i)
     print(cm)
 
 
