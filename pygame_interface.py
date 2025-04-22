@@ -1,6 +1,6 @@
 import pygame
 import sys
-import valid as main
+import main
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
