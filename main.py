@@ -1,6 +1,6 @@
-table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
+table = [['brl', '0', 'bbl', 'bq', 'wk', 'bbr', 'bhr', 'brr'],
          ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
-         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', 'bq', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
@@ -340,7 +340,6 @@ def valid_pos(chance):
                                             elif table[i-ul][j-ul][0] == 'b':
                                                 piece.append((j-ul, i-ul))
                                                 break
-                                                
                     if table[i][j][1] == 'k':
                         piece = pos[28]
                         if  i != 0:
@@ -634,7 +633,7 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'b':
                         if table[i][j][2] == 'l':
-                            piece = pos[3]
+                            piece = pos[2]
                             for move in range(4):
 
                                 if move == 0:
@@ -861,14 +860,237 @@ def valid_pos(chance):
                                             piece.append((j - ul, i - ul))
                                             break
 
+def validpos_filter(mode,attacker):
+    def filtering(os):
+        if os == 'b':
+            global kpiece, side
+            kpiece = pos[28]
+            side = 'w'
+        elif os == 'w':
+            kpiece = pos[4]
+            side = 'b'
+        for i in pos:
+            if i[0][0] == os:
+                for j in i:
+                    if j in kpiece:
+                        kpiece.remove(j)
+
+        global beam
+        beam = []
+        oneshot = list('hkp')
+        if attacker[0] == os and attacker[1] == 'r':
+            for i in range(len(table)):
+                for j in range(len(table[i])):
+                    if table[i][j][0] == os and table[i][j][1] == 'r':
+                        attacker_pos = [j, i]
+                        aj = j
+                        ai = i
+                    elif table[i][j][0] == side and table[i][j][1] == 'k':
+                        ki = i
+                        kj = j
+            for i in kpiece:
+                if attacker_pos[0] == i[0]:
+                    kpiece.remove(i)
+                if attacker_pos[1] == i[1]:
+                    kpiece.remove(i)
+
+            if ai == ki:
+                s = min(aj,kj)
+                b = max(aj,kj)
+                for i in range(s,b):
+                    beam.append((i, ai))
+            elif aj == kj:
+                s = min(ai, ki)
+                b = max(ai,ki)
+                for i in range(s, b):
+                    beam.append((aj, i))
 
 
+            for i in range(len(pos)):
+                if pos[i][0][0] == side:
+                    sub = []
+                    for j in range(len(pos[i])):
+                        if j == 0:
+                            sub.append(pos[i][j])
+                        else:
+                            if pos[i][j] in beam:
+                                sub.append(pos[i][j])
+                    pos[i] = sub
 
-    print(pos)
-    print('####################################')
-    cm = 0
-    for i in pos:
-        if len(i) != 1:
-            cm += (len(i) - 1)
-            print(i)
-    print(cm)
+
+        elif attacker[0] == os and  attacker[1] == 'b':
+            for i in range(len(table)):
+                for j in range(len(table[i])):
+                    if table[i][j][0] == os and table[i][j][1] == 'b':
+                        aj = j
+                        ai = i
+                    elif table[i][j][0] == side and table[i][j][1] == 'k':
+                        kj = j
+                        ki = i
+
+            beam.append((aj, ai))
+            r = abs(kj-aj)
+
+            # Left Bottom (king_pos)
+            if kj < aj and ki > ai:
+                for i in range(1, r):
+                    beam.append((kj + i, ki - i))
+                if kj != 0 and ki != 7:
+                    kpiece.remove((kj - 1, ki + 1))
+
+            # Left Top
+            elif kj < aj and ki  < ai:
+                for i in range(1, r):
+                    beam.append((kj + i, ki + i))
+                if kj != 0 and ki != 0:
+                    kpiece.remove((kj - 1, ki - 1))
+
+            # Right Bottom
+            elif kj > aj and ki > ai:
+                for i in range(1, r):
+                    beam.append((kj - i, ki - i))
+            if kj != 7 and ki != 7:
+                kpiece.remove((kj + 1, ki + 1))
+
+            # Right Top
+            elif kj > aj and ki < ai:
+                for i in range(1, r):
+                    beam.append((kj - i, ki + i))
+                if kj != 7 and ki != 0:
+                    kpiece.remove((kj + 1, ki - 1))
+
+            for i in range(len(pos)):
+                if pos[i][0][0] == side:
+                    sub = []
+                    for j in range(len(pos[i])):
+                        if j == 0:
+                            sub.append(pos[i][j])
+                        else:
+                            if pos[i][j] in beam:
+                                sub.append(pos[i][j])
+                    pos[i] = sub
+
+        elif attacker[0] == os and  attacker[1] == 'q':
+
+            # Rook Moves for Queen
+            for i in range(len(table)):
+                for j in range(len(table[i])):
+                    if table[i][j][0] == os and table[i][j][1] == 'q':
+                        attacker_pos = [j, i]
+                        aj = j
+                        ai = i
+                    elif table[i][j][0] == side and table[i][j][1] == 'k':
+                        ki = i
+                        kj = j
+            for i in kpiece:
+                if attacker_pos[0] == i[0]:
+                    kpiece.remove(i)
+                if attacker_pos[1] == i[1]:
+                    kpiece.remove(i)
+
+            if ai == ki:
+                s = min(aj,kj)
+                b = max(aj,kj)
+                for i in range(s,b):
+                    beam.append((i, ai))
+            elif aj == kj:
+                s = min(ai, ki)
+                b = max(ai,ki)
+                for i in range(s, b):
+                    beam.append((aj, i))
+
+
+            # Bishop moves for Queen
+            for i in range(len(pos)):
+                if pos[i][0][0] == side:
+                    sub = []
+                    for j in range(len(pos[i])):
+                        if j == 0:
+                            sub.append(pos[i][j])
+                        else:
+                            if pos[i][j] in beam:
+                                sub.append(pos[i][j])
+                    pos[i] = sub
+
+            for i in range(len(table)):
+                for j in range(len(table[i])):
+                    if table[i][j][0] == os and table[i][j][1] == 'q':
+                        aj = j
+                        ai = i
+                    elif table[i][j][0] == side and table[i][j][1] == 'k':
+                        kj = j
+                        ki = i
+
+            r = abs(kj - aj)
+
+            # Left Bottom (king_pos)
+            if kj < aj and ki > ai:
+                for i in range(1, r):
+                    beam.append((kj + i, ki - i))
+                if kj != 0 and ki != 7:
+                    kpiece.remove((kj - 1, ki + 1))
+
+            # Left Top
+            elif kj < aj and ki < ai:
+                for i in range(1, r):
+                    beam.append((kj + i, ki + i))
+                if kj != 0 and ki != 0:
+                    kpiece.remove((kj - 1, ki - 1))
+
+            # Right Bottom
+            elif kj > aj and ki > ai:
+                for i in range(1, r):
+                    beam.append((kj - i, ki - i))
+            if kj != 7 and ki != 7:
+                kpiece.remove((kj + 1, ki + 1))
+
+            # Right Top
+            elif kj > aj and ki < ai:
+                for i in range(1, r):
+                    beam.append((kj - i, ki + i))
+                if kj != 7 and ki != 0:
+                    kpiece.remove((kj + 1, ki - 1))
+
+            for i in range(len(pos)):
+                if pos[i][0][0] == side:
+                    sub = []
+                    for j in range(len(pos[i])):
+                        if j == 0:
+                            sub.append(pos[i][j])
+                        else:
+                            if pos[i][j] in beam:
+                                sub.append(pos[i][j])
+                    pos[i] = sub
+
+            if aj != kj and  ai != ki:
+                beam.append((aj, ai))
+
+        elif attacker[0] == os and  attacker[1] in oneshot :
+            for i in range(len(table)):
+                for j in range(len(table[i])):
+                    if table[i][j] == attacker:
+                        beam.append((j, i))
+
+
+    if mode[0] == 'w':
+        filtering('b')
+
+    elif mode[1] == 'b':
+        filtering('w')
+
+def check_checker(s):
+    for i in range(len(table)):
+        for j in range(len(table[i])):
+            if table[i][j][0] == 'w' and table[i][j][1] == 'k' and s == 'white':
+                for position in  pos:
+                    if (j, i) in position:
+                        validpos_filter('wcheck',position[0])
+                        return 'wcheck'
+            if table[i][j][0] == 'b' and table[i][j][1] == 'k' and s == 'black':
+                for position in  pos:
+                    if (j, i) in position:
+                        validpos_filter('bcheck',position[0])
+                        return 'bcheck'
+
+valid_pos(chance)
+check_checker(chance)
