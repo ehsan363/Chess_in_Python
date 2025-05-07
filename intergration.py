@@ -1,7 +1,9 @@
 import pygame
 import sys
-import promotion as main
+from promotion import chance_changer
 
+
+sss = 0
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
 run = True
@@ -200,10 +202,11 @@ class Piece:
                     black_piece[i][1] = new_grid_pos
                     self.pos = new_grid_pos
                     return
-        main.change_changer(chance)
+        chancep = change_changer(chance)
 
 
-#  This 'position' underneath controls the posi/tion of the pieces
+#  This 'position' underneath controls the position of the pieces
+
 '''pieces = [
     Piece((0, 0), pieces_img["bl_rook"]),
     Piece((1, 0), pieces_img["bl_horse"]),
@@ -283,6 +286,24 @@ while run:
                         black_player += event.unicode
 
         elif state == 'game':
+
+            # the replacement for list pieces
+            # Current Problem
+            # there is no .draw() and even if there is one it won't shjow all and idk why?
+            from promotion import table, c
+            if c != cc:
+                cc += 1
+                for i in range(len(table)):
+                    for j in range(len(table[i])):
+                        if table[i][j] != '0':
+                            global pieces
+                            pieces = []
+                            if len(pieces) != 0:
+                                pieces.clear()
+                            sss+=1
+                            pieces.append(Piece((j, i), pieces_img[table[i][j]]))
+
+            # The above is of consern
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for piece in reversed(pieces):
                     if piece.handle_mouse_down(event.pos):
@@ -290,25 +311,17 @@ while run:
                         pieces.append(piece)
                         break
             elif event.type == pygame.MOUSEBUTTONUP:
-                for piece in pieces:
-                    if piece.dragging:
-                        piece.handle_mouse_up()
+                if len(pieces) != 0:
+                    for piece in pieces:
+                        if piece.dragging:
+                            piece.handle_mouse_up()
 
     if state == 'dashboard':
         dashboard()
     elif state == 'game':
-        for i in range(len(main.table)):
-            for j in range(len(main.table[i])):
-                print(main.table[i][j])
-                if main.table[i][j] != '0':
-                    Piece((j, i), pieces_img[main.table[i][j]]).draw()
-        if cc == 0:
-            cc += 1
-            print('White:', white_player)
-            print('Black:', black_player)
-
-
         gameplay(white_player, black_player)
+        for piece in pieces:
+            piece.draw()
 
     pygame.display.update()
     clock.tick(60)

@@ -9,14 +9,17 @@ table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
 chance = 'white'
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
-
+c = 1
 
 def chance_changer(ch):
     if ch == 'white':
         global chance
         chance = 'black'
+        c+=1
     elif ch == 'black':
         chance = 'white'
+        c+=1
+    return chance
 
 
 pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
