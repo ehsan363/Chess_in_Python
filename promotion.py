@@ -11,7 +11,7 @@ one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
 
-def chance_changer(ch):
+def chance_changer(ch,c):
     if ch == 'white':
         global chance
         chance = 'black'
@@ -19,7 +19,7 @@ def chance_changer(ch):
     elif ch == 'black':
         chance = 'white'
         c+=1
-    return chance
+    return chance, c
 
 
 pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],

@@ -9,14 +9,17 @@ table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
 chance = 'white'
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
+c = 1
 
-
-def chance_changer(ch):
+def chance_changer(ch,c):
     if ch == 'white':
         global chance
         chance = 'black'
+        c+=1
     elif ch == 'black':
         chance = 'white'
+        c+=1
+    return chance, c
 
 
 pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
@@ -90,7 +93,6 @@ def valid_pos(chance):
                                         piece.append((j + 1, i - 1))
 
                         if i == 6:
-                            print('shit', table[i][j])
                             one[int(table[i][j][2]) + 8] = 1
                         elif i == 5:
                             one[int(table[i][j][2]) + 8] = 0
@@ -530,9 +532,6 @@ def valid_pos(chance):
                                     piece.append((j, i + 1))
                                 elif one[int(table[i][j][2])] == 0 and table[i - 1][j] == '0':
                                     piece.append((j, i + 1))
-
-                                print('j, i', j, i)
-                                print()
 
                                 if j != 0 and i != 7:
                                     if table[i + 1][j - 1][0] == 'w':
@@ -1037,28 +1036,28 @@ def validpos_filter(mode, attacker):
             beam.append((aj, ai))
             r = abs(kj - aj)
 
-            # Left Bottom (king_pos)
+
             if kj < aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki - i))
                 if kj != 0 and ki != 7:
                     kpiece.remove((kj - 1, ki + 1))
 
-            # Left Top
+
             elif kj < aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki + i))
                 if kj != 0 and ki != 0:
                     kpiece.remove((kj - 1, ki - 1))
 
-            # Right Bottom
+
             elif kj > aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki - i))
             if kj != 7 and ki != 7:
                 kpiece.remove((kj + 1, ki + 1))
 
-            # Right Top
+
             elif kj > aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki + i))
@@ -1078,7 +1077,7 @@ def validpos_filter(mode, attacker):
 
         elif attacker[0] == os and attacker[1] == 'q':
 
-            # Rook Moves for Queen
+
             for i in range(len(table)):
                 for j in range(len(table[i])):
                     if table[i][j][0] == os and table[i][j][1] == 'q':
@@ -1105,7 +1104,7 @@ def validpos_filter(mode, attacker):
                 for i in range(s, b):
                     beam.append((aj, i))
 
-            # Bishop moves for Queen
+
             for i in range(len(pos)):
                 if pos[i][0][0] == side:
                     sub = []
@@ -1128,28 +1127,28 @@ def validpos_filter(mode, attacker):
 
             r = abs(kj - aj)
 
-            # Left Bottom (king_pos)
+
             if kj < aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki - i))
                 if kj != 0 and ki != 7:
                     kpiece.remove((kj - 1, ki + 1))
 
-            # Left Top
+
             elif kj < aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki + i))
                 if kj != 0 and ki != 0:
                     kpiece.remove((kj - 1, ki - 1))
 
-            # Right Bottom
+
             elif kj > aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki - i))
             if kj != 7 and ki != 7:
                 kpiece.remove((kj + 1, ki + 1))
 
-            # Right Top
+
             elif kj > aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki + i))
@@ -1200,6 +1199,3 @@ def check_checker(s):
 
 valid_pos(chance)
 check_checker(chance)
-for i in pos:
-    if len(i) != 1:
-        print(i)

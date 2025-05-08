@@ -1,6 +1,6 @@
 import pygame
 import sys
-from main import table, chance_changer, c
+from promotion import table, chance_changer, c
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
