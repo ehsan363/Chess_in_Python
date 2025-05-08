@@ -101,7 +101,6 @@ black_piece = [
     ['pawn_5', (4, 6)], ['pawn_6', (5, 6)], ['pawn_7', (6, 6)], ['pawn_8', (7, 6)]
 ]
 
-
 state = 'dashboard'
 def dashboard():
     screen.blit(dashboard_img, (0, 0))
@@ -295,11 +294,6 @@ while run:
     if state == 'dashboard':
         dashboard()
     elif state == 'game':
-        if cc == 0:
-            cc += 1
-            print('White:', white_player)
-            print('Black:', black_player)
-
         gameplay(white_player, black_player)
 
         for piece in pieces:
