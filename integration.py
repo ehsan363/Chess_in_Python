@@ -1,6 +1,6 @@
 import pygame
 import sys
-from promotion import table, chance_changer, c
+from promotion import *
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
@@ -34,7 +34,7 @@ covering_text = playername_font.render('Name', True, (220, 220, 220))
 # Chess board
 grid_size = 102
 rows, cols = 8, 8
-valid_pos = [(x, y) for x in range(cols) for y in range(rows)]
+global chance
 chance = 'white'
 dragged_piece = None
 
@@ -179,10 +179,11 @@ def state_changer():
 
 # The piece creator and handler
 class Piece:
-    def __init__(self, position, piece_id, image):
+    def __init__(self, position, piece_id, image, chance):
         self.pos = position
         self.piece_id = piece_id
         self.image = image
+        self.chance = chance
         self.dragging = False
         self.offset_x = 0
         self.offset_y = 0
@@ -217,27 +218,20 @@ class Piece:
 
         if new_grid_pos is None:
             return
-
+        pos = valid_pos(self.chance)
+        print('pos',pos)
+        for i in pos:
+            if i[0] == self.piece_id:
+                valid_position = i
+        print('valid_pos', valid_position)
         # Valid positions UPDATE position
-        if new_grid_pos in valid_pos:
-            # Check the value of new position and if it is a piece, color of the value
-            # Not allow piece to capture same side
-            target_piece_id = table[new_grid_pos[1]][new_grid_pos[0]]
-            if target_piece_id != '0':
-                if (self.piece_id[0] == 'w' and target_piece_id[0] == 'b') or \
-                       (self.piece_id[0] == 'b' and target_piece_id[0] == 'w'):
-                    pass
-                else:
-                    return
-
+        if new_grid_pos in valid_position:
             table[old_pos[1]][old_pos[0]] = '0'
             table[new_grid_pos[1]][new_grid_pos[0]] = self.piece_id
             self.pos = new_grid_pos
 
             # Change the turn after a move
-            global chance
-            chance = 'black' if chance == 'white' else 'white'
-            chance_changer(chance, c)
+            self.chance = 'black' if self.chance == 'white' else 'white'
 
 
 pieces = []
@@ -272,7 +266,7 @@ def update_pieces_from_table():
             if piece_id != '0':
 
                 if piece_id in pieces_img:
-                    pieces.append(Piece((j, i), piece_id, pieces_img[piece_id]))
+                    pieces.append(Piece((j, i), piece_id, pieces_img[piece_id], chance))
                 else:
                     print(f"Warning: Unknown piece ID '{piece_id}' at position ({j}, {i})")
 

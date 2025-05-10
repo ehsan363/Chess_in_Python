@@ -6,10 +6,11 @@ table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
          ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
-chance = 'white'
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
+
+log =  open('log.txt','a')
 
 def chance_changer(ch,c):
     if ch == 'white':
@@ -20,12 +21,6 @@ def chance_changer(ch,c):
         chance = 'white'
         c+=1
     return chance, c
-
-
-pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
-       ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
-       ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
-       ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
 
 
 def distance(m, ii, jj):
@@ -64,6 +59,10 @@ def distance(m, ii, jj):
 
 
 def valid_pos(chance):
+    pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
+           ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
+           ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
+           ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
     if chance == 'white':
         for i in range(len(table)):
             for j in range(len(table[i])):
@@ -73,8 +72,7 @@ def valid_pos(chance):
 
                         for piece in pos:
                             if piece[0] == table[i][j]:
-                                if one[int(table[i][j][2]) + 8] == 1 and table[i - 1][j] == '0' and table[i - 2][
-                                    j] == '0':
+                                if one[int(table[i][j][2]) + 8] == 1 and table[i - 1][j] == '0' and table[i - 2][j] == '0':
                                     piece.append((j, i - 1))
                                     piece.append((j, i - 2))
                                 elif one[int(table[i][j][2]) + 8] == 0 and table[i - 1][j] == '0':
@@ -83,6 +81,10 @@ def valid_pos(chance):
 
                                     if table[i - 1][j - 1][0] == 'b':
                                         piece.append((j - 1, i - 1))
+
+                                    log.write(f'''{table[i][j]}
+i {i}, j {j}''')
+                                    log.flush()
                                     if table[i - 1][j - 1][0] == 'b' and one[int(table[i][j - 1][2])] == 2:
                                         piece.append((j - 1, i - 1))
 
@@ -524,19 +526,18 @@ def valid_pos(chance):
                     if table[i][j][1] == 'p':
                         for piece in pos:
                             if piece[0] == table[i][j]:
-                                if one[int(table[i][j][2])] == 1 and table[i - 1][j] == '0' and table[i - 2][j] == '0':
+                                if one[int(table[i][j][2])] == 1 and table[i + 1][j] == '0' and table[i + 2][j] == '0':
                                     piece.append((j, i + 1))
                                     piece.append((j, i + 2))
-                                elif one[int(table[i][j][2])] == 1 and table[i - 1][j] == '0' and table[i - 2][
-                                    j] != '0':
+                                elif one[int(table[i][j][2])] == 1 and table[i + 1][j] == '0' and table[i + 2][j] != '0':
                                     piece.append((j, i + 1))
-                                elif one[int(table[i][j][2])] == 0 and table[i - 1][j] == '0':
+                                elif one[int(table[i][j][2])] == 0 and table[i + 1][j] == '0':
                                     piece.append((j, i + 1))
 
                                 if j != 0 and i != 7:
                                     if table[i + 1][j - 1][0] == 'w':
                                         piece.append((j - 1, i + 1))
-                                    if table[i][j - 1][0] == 'b' and one[int(table[i][j - 1][2]) + 8] == 2:
+                                    if table[i + 1][j - 1][0] == 'w' and one[int(table[i][j - 1][2]) + 8] == 2:
                                         piece.append((j - 1, i + 1))
 
                                 if j != 7 and i != 7:
@@ -964,6 +965,12 @@ def valid_pos(chance):
                                         elif table[i - ul][j - ul][0] == 'w':
                                             piece.append((j - ul, i - ul))
                                             break
+        t = []
+        for i in pos:
+            if len(i)!=1:
+                t.append(i)
+        log.write(f'\npos = {t}')
+        check_checker(chance, pos)
 
 
 def validpos_filter(mode, attacker):
@@ -1036,28 +1043,28 @@ def validpos_filter(mode, attacker):
             beam.append((aj, ai))
             r = abs(kj - aj)
 
-            # Left Bottom (king_pos)
+
             if kj < aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki - i))
                 if kj != 0 and ki != 7:
                     kpiece.remove((kj - 1, ki + 1))
 
-            # Left Top
+
             elif kj < aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki + i))
                 if kj != 0 and ki != 0:
                     kpiece.remove((kj - 1, ki - 1))
 
-            # Right Bottom
+
             elif kj > aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki - i))
             if kj != 7 and ki != 7:
                 kpiece.remove((kj + 1, ki + 1))
 
-            # Right Top
+
             elif kj > aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki + i))
@@ -1077,7 +1084,7 @@ def validpos_filter(mode, attacker):
 
         elif attacker[0] == os and attacker[1] == 'q':
 
-            # Rook Moves for Queen
+
             for i in range(len(table)):
                 for j in range(len(table[i])):
                     if table[i][j][0] == os and table[i][j][1] == 'q':
@@ -1104,7 +1111,7 @@ def validpos_filter(mode, attacker):
                 for i in range(s, b):
                     beam.append((aj, i))
 
-            # Bishop moves for Queen
+
             for i in range(len(pos)):
                 if pos[i][0][0] == side:
                     sub = []
@@ -1127,28 +1134,28 @@ def validpos_filter(mode, attacker):
 
             r = abs(kj - aj)
 
-            # Left Bottom (king_pos)
+
             if kj < aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki - i))
                 if kj != 0 and ki != 7:
                     kpiece.remove((kj - 1, ki + 1))
 
-            # Left Top
+
             elif kj < aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj + i, ki + i))
                 if kj != 0 and ki != 0:
                     kpiece.remove((kj - 1, ki - 1))
 
-            # Right Bottom
+
             elif kj > aj and ki > ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki - i))
             if kj != 7 and ki != 7:
                 kpiece.remove((kj + 1, ki + 1))
 
-            # Right Top
+
             elif kj > aj and ki < ai:
                 for i in range(1, r):
                     beam.append((kj - i, ki + i))
@@ -1182,20 +1189,24 @@ def validpos_filter(mode, attacker):
         filtering('w')
 
 
-def check_checker(s):
+def check_checker(s, posi):
     for i in range(len(table)):
         for j in range(len(table[i])):
-            if table[i][j][0] == 'w' and table[i][j][1] == 'k' and s == 'white':
-                for position in pos:
+            if  s == 'white' and table[i][j] == 'wk':
+                check = 0
+                for position in posi:
                     if (j, i) in position:
-                        validpos_filter('wcheck', position[0])
-                        return 'wcheck'
-            if table[i][j][0] == 'b' and table[i][j][1] == 'k' and s == 'black':
-                for position in pos:
+                        if check == 1:
+                            validpos_filter('wcheck', position[0])
+                            return 'wcheck'
+                        elif check == 0:
+                            return posi
+            if s == 'black' and table[i][j] == 'bk':
+                check = 0
+                for position in posi:
                     if (j, i) in position:
-                        validpos_filter('bcheck', position[0])
-                        return 'bcheck'
-
-
-valid_pos(chance)
-check_checker(chance)
+                        if check == 1:
+                            validpos_filter('bcheck', position[0])
+                            return 'bcheck'
+                        elif check == 0:
+                            return posi
