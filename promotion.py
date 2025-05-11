@@ -79,7 +79,7 @@ def valid_pos(chance):
                                         piece.append((j, i - 2))
 
                                 elif i != 6 and i != 0:
-                                    if table[i-1] == '0':
+                                    if table[i-1][j] == '0':
                                         piece.append((j, i- 1))
 
                                 if j != 0 and i != 0:
@@ -521,7 +521,7 @@ def valid_pos(chance):
                                     piece.append((j, i + 2))
 
                             elif i != 1 and i != 7:
-                                if table[i + 1] == '0':
+                                if table[i + 1][j] == '0':
                                     piece.append((j, i - 1))
 
                             if j != 7 and i != 7:

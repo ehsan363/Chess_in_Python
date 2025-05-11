@@ -54,7 +54,7 @@ def pixel_to_grid(pos):
     return None
 
 
-
+print()
 # Piece images dict
 pieces_img = {
     'wk': pygame.transform.scale(pygame.image.load('game_img/w_pieces/w_king.png').convert_alpha(),
@@ -221,14 +221,8 @@ class Piece:
         pos = valid_pos(self.chance)
 
         for i in pos:
-            if len(i) != 1:
-                print(i)
-
-
-        for i in pos:
             if i[0] == self.piece_id:
                 valid_position = i
-        print('valid_pos', valid_position)
         # Valid positions UPDATE position
         if new_grid_pos in valid_position:
             table[old_pos[1]][old_pos[0]] = '0'
