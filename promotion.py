@@ -10,7 +10,6 @@ one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
 
-log =  open('log.txt','a')
 
 def chance_changer(ch,c):
     if ch == 'white':
@@ -961,12 +960,8 @@ def valid_pos(chance):
                                         elif table[i - ul][j - ul][0] == 'w':
                                             piece.append((j - ul, i - ul))
                                             break
-        '''t = []
-        for i in pos:
-            if len(i)!=1:
-                t.append(i)
-        log.write(f'valid_pos = {t}\n')'''
-        check_checker(chance, pos)
+
+        return check_checker(chance, pos)
 
 
 def validpos_filter(mode, attacker):
@@ -1184,9 +1179,6 @@ def validpos_filter(mode, attacker):
     elif mode[1] == 'b':
         filtering('w')
 
-def trasfer(pos):
-    log.write(f'transfer {pos}\n')
-    return pos
 def check_checker(s, posi):
     pos = posi
     #log.write(f'posi,pos {posi}\n')
@@ -1199,23 +1191,17 @@ def check_checker(s, posi):
                     if (j, i) in position:
                         check+=1
                 if check > 0:
-                    #log.write('wcheck \n')
-                    #log.flush()
                     validpos_filter('wcheck', position[0])
                     return 'wcheck'
                 elif check == 0:
-                        #log.write(f'return {pos}')
-                        trasfer(pos)
+                        return pos
             if s == 'black' and table[i][j] == 'bk':
                 check = 0
                 for position in posi:
                     if (j, i) in position:
                         check+=1
                 if check > 0:
-                    #log.write('bcheck \n')
-                    #log.flush()
                     validpos_filter('bcheck', position[0])
                     return 'bcheck'
                 elif check ==  0:
-                        #log.write(f'return {pos}')
-                        trasfer(pos)
+                        return pos
