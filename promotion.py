@@ -81,10 +81,6 @@ def valid_pos(chance):
 
                                     if table[i - 1][j - 1][0] == 'b':
                                         piece.append((j - 1, i - 1))
-
-                                    log.write(f'''{table[i][j]}
-i {i}, j {j}''')
-                                    log.flush()
                                     if table[i - 1][j - 1][0] == 'b' and one[int(table[i][j - 1][2])] == 2:
                                         piece.append((j - 1, i - 1))
 
@@ -965,11 +961,11 @@ i {i}, j {j}''')
                                         elif table[i - ul][j - ul][0] == 'w':
                                             piece.append((j - ul, i - ul))
                                             break
-        t = []
+        '''t = []
         for i in pos:
             if len(i)!=1:
                 t.append(i)
-        log.write(f'\npos = {t}')
+        log.write(f'valid_pos = {t}\n')'''
         check_checker(chance, pos)
 
 
@@ -1188,25 +1184,38 @@ def validpos_filter(mode, attacker):
     elif mode[1] == 'b':
         filtering('w')
 
-
+def trasfer(pos):
+    log.write(f'transfer {pos}\n')
+    return pos
 def check_checker(s, posi):
+    pos = posi
+    #log.write(f'posi,pos {posi}\n')
+    #log.flush()
     for i in range(len(table)):
         for j in range(len(table[i])):
             if  s == 'white' and table[i][j] == 'wk':
                 check = 0
                 for position in posi:
                     if (j, i) in position:
-                        if check == 1:
-                            validpos_filter('wcheck', position[0])
-                            return 'wcheck'
-                        elif check == 0:
-                            return posi
+                        check+=1
+                if check > 0:
+                    #log.write('wcheck \n')
+                    #log.flush()
+                    validpos_filter('wcheck', position[0])
+                    return 'wcheck'
+                elif check == 0:
+                        #log.write(f'return {pos}')
+                        trasfer(pos)
             if s == 'black' and table[i][j] == 'bk':
                 check = 0
                 for position in posi:
                     if (j, i) in position:
-                        if check == 1:
-                            validpos_filter('bcheck', position[0])
-                            return 'bcheck'
-                        elif check == 0:
-                            return posi
+                        check+=1
+                if check > 0:
+                    #log.write('bcheck \n')
+                    #log.flush()
+                    validpos_filter('bcheck', position[0])
+                    return 'bcheck'
+                elif check ==  0:
+                        #log.write(f'return {pos}')
+                        trasfer(pos)
