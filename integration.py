@@ -219,7 +219,12 @@ class Piece:
         if new_grid_pos is None:
             return
         pos = valid_pos(self.chance)
-        print('pos',pos)
+
+        for i in pos:
+            if len(i) != 1:
+                print(i)
+
+
         for i in pos:
             if i[0] == self.piece_id:
                 valid_position = i
