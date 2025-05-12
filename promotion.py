@@ -10,7 +10,6 @@ one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
 
-
 def chance_changer(ch,c):
     if ch == 'white':
         global chance
@@ -513,23 +512,27 @@ def valid_pos(chance):
             for j in range(len(table[i])):
                 if table[i][j][0] == 'b':
                     if table[i][j][1] == 'p':
+
                         for piece in pos:
-                            if i == 1:
-                                if table[i + 1][j] == '0':
-                                    piece.append((j, i + 1))
-                                if table[i + 2][j] == '0' and table[i + 1][j] == '0':
-                                    piece.append((j, i + 2))
+                            if piece[0] == table[i][j]:
 
-                            elif i != 1 and i != 7:
-                                if table[i + 1][j] == '0':
-                                    piece.append((j, i - 1))
+                                if i == 1:
+                                    if table[i + 1][j] == '0':
+                                        piece.append((j, i + 1))
+                                    if table[i + 2][j] == '0' and table[i + 1][j] == '0':
+                                        piece.append((j, i + 2))
 
-                            if j != 7 and i != 7:
-                                if table[i + 1][j + 1][0] == 'w':
-                                    piece.append((j - 1, i - 1))
-                            if j != 0 and i != 7:
-                                if table[i - 1][j + 1][0] == 'w':
-                                    piece.append((j + 1, i - 1))
+                                elif i != 1 and i != 7:
+                                    if table[i + 1][j] == '0':
+                                        piece.append((j, i - 1))
+
+                                if j != 7 and i != 7:
+                                    if table[i + 1][j + 1][0] == 'w':
+                                        piece.append((j + 1, i + 1))
+                                if j != 0 and i != 7:
+                                    if table[i + 1][j - 1][0] == 'w':
+                                        piece.append((j - 1, i + 1))
+
 
 
                     if table[i][j][1] == 'r':
@@ -1198,6 +1201,3 @@ def check_checker(s, posi):
                         return pos
 chance = 'white'
 p = valid_pos(chance)
-for i in p:
-    if len(i) != 1:
-        print(i)
