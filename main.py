@@ -1,12 +1,11 @@
 table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
-         ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
+         ['0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', 'bp0', '0', '0', '0', '0', '0', '0'],
          ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
          ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
-chance = 'white'
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
@@ -20,12 +19,6 @@ def chance_changer(ch,c):
         chance = 'white'
         c+=1
     return chance, c
-
-
-pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
-       ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
-       ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
-       ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
 
 
 def distance(m, ii, jj):
@@ -64,6 +57,10 @@ def distance(m, ii, jj):
 
 
 def valid_pos(chance):
+    pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
+           ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
+           ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
+           ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
     if chance == 'white':
         for i in range(len(table)):
             for j in range(len(table[i])):
@@ -73,33 +70,23 @@ def valid_pos(chance):
 
                         for piece in pos:
                             if piece[0] == table[i][j]:
-                                if one[int(table[i][j][2]) + 8] == 1 and table[i - 1][j] == '0' and table[i - 2][
-                                    j] == '0':
-                                    piece.append((j, i - 1))
-                                    piece.append((j, i - 2))
-                                elif one[int(table[i][j][2]) + 8] == 0 and table[i - 1][j] == '0':
-                                    piece.append((j, i - 1))
+
+                                if i == 6:
+                                    if table[i - 1][j] == '0':
+                                        piece.append((j ,i - 1))
+                                    if table[i - 2][j] == '0' and table[i - 1][j] == '0':
+                                        piece.append((j, i - 2))
+
+                                elif i != 6 and i != 0:
+                                    if table[i-1][j] == '0':
+                                        piece.append((j, i- 1))
+
                                 if j != 0 and i != 0:
-
                                     if table[i - 1][j - 1][0] == 'b':
-                                        piece.append((j - 1, i - 1))
-                                    if table[i - 1][j - 1][0] == 'b' and one[int(table[i][j - 1][2])] == 2:
-                                        piece.append((j - 1, i - 1))
-
+                                        piece.append((j - 1,i - 1))
                                 if j != 7 and i != 0:
                                     if table[i - 1][j + 1][0] == 'b':
-                                        piece.append((j + 1, i - 1))
-                                    if table[i - 1][j + 1][0] == 'b' and one[int(table[i][j + 1][2])] == 2:
-                                        piece.append((j + 1, i - 1))
-
-                        if i == 6:
-                            one[int(table[i][j][2]) + 8] = 1
-                        elif i == 5:
-                            one[int(table[i][j][2]) + 8] = 0
-                        elif i == 4 and one[int(table[i][j][2])] == 0:
-                            one[int(table[i][j][2]) + 8] = 2
-                        elif i == 3:
-                            one[int(table[i][j][2]) + 8] = 0
+                                        piece.append((j + 1,i - 1))
 
                     if table[i][j][1] == 'r':
                         if table[i][j][2] == 'r':
@@ -520,30 +507,33 @@ def valid_pos(chance):
                                             break
 
 
-                elif table[i][j][0] == 'b':
+    elif chance == 'black':
+        for i in range(len(table)):
+            for j in range(len(table[i])):
+                if table[i][j][0] == 'b':
                     if table[i][j][1] == 'p':
+
                         for piece in pos:
                             if piece[0] == table[i][j]:
-                                if one[int(table[i][j][2])] == 1 and table[i - 1][j] == '0' and table[i - 2][j] == '0':
-                                    piece.append((j, i + 1))
-                                    piece.append((j, i + 2))
-                                elif one[int(table[i][j][2])] == 1 and table[i - 1][j] == '0' and table[i - 2][
-                                    j] != '0':
-                                    piece.append((j, i + 1))
-                                elif one[int(table[i][j][2])] == 0 and table[i - 1][j] == '0':
-                                    piece.append((j, i + 1))
 
-                                if j != 0 and i != 7:
-                                    if table[i + 1][j - 1][0] == 'w':
-                                        piece.append((j - 1, i + 1))
-                                    if table[i][j - 1][0] == 'b' and one[int(table[i][j - 1][2]) + 8] == 2:
-                                        piece.append((j - 1, i + 1))
+                                if i == 1:
+                                    if table[i + 1][j] == '0':
+                                        piece.append((j, i + 1))
+                                    if table[i + 2][j] == '0' and table[i + 1][j] == '0':
+                                        piece.append((j, i + 2))
+
+                                elif i != 1 and i != 7:
+                                    if table[i + 1][j] == '0':
+                                        piece.append((j, i - 1))
 
                                 if j != 7 and i != 7:
                                     if table[i + 1][j + 1][0] == 'w':
                                         piece.append((j + 1, i + 1))
-                                    if table[i][j + 1][0] == 'w' and one[int(table[i][j + 1][2]) + 8] == 2:
-                                        piece.append((j + 1, i + 1))
+                                if j != 0 and i != 7:
+                                    if table[i + 1][j - 1][0] == 'w':
+                                        piece.append((j - 1, i + 1))
+
+
 
                     if table[i][j][1] == 'r':
                         if table[i][j][2] == 'r':
@@ -965,6 +955,8 @@ def valid_pos(chance):
                                             piece.append((j - ul, i - ul))
                                             break
 
+    return check_checker(chance, pos)
+
 
 def validpos_filter(mode, attacker):
     def filtering(os):
@@ -1181,21 +1173,29 @@ def validpos_filter(mode, attacker):
     elif mode[1] == 'b':
         filtering('w')
 
-
-def check_checker(s):
+def check_checker(s, posi):
+    pos = posi
     for i in range(len(table)):
         for j in range(len(table[i])):
-            if table[i][j][0] == 'w' and table[i][j][1] == 'k' and s == 'white':
-                for position in pos:
+            if  s == 'white' and table[i][j] == 'wk':
+                check = 0
+                for position in posi:
                     if (j, i) in position:
-                        validpos_filter('wcheck', position[0])
-                        return 'wcheck'
-            if table[i][j][0] == 'b' and table[i][j][1] == 'k' and s == 'black':
-                for position in pos:
+                        check+=1
+                if check > 0:
+                    validpos_filter('wcheck', position[0])
+                    return 'wcheck'
+                elif check == 0:
+                        return pos
+            if s == 'black' and table[i][j] == 'bk':
+                check = 0
+                for position in posi:
                     if (j, i) in position:
-                        validpos_filter('bcheck', position[0])
-                        return 'bcheck'
-
-
-valid_pos(chance)
-check_checker(chance)
+                        check+=1
+                if check > 0:
+                    validpos_filter('bcheck', position[0])
+                    return 'bcheck'
+                elif check ==  0:
+                        return pos
+chance = 'white'
+p = valid_pos(chance)

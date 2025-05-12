@@ -1,6 +1,6 @@
 import pygame
 import sys
-from main import table, chance_changer, c
+from promotion import *
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
@@ -34,7 +34,7 @@ covering_text = playername_font.render('Name', True, (220, 220, 220))
 # Chess board
 grid_size = 102
 rows, cols = 8, 8
-valid_pos = [(x, y) for x in range(cols) for y in range(rows)]
+global chance
 chance = 'white'
 dragged_piece = None
 
@@ -52,7 +52,6 @@ def pixel_to_grid(pos):
     if 0 <= x < 8 and 0 <= y < 8:
         return x, y
     return None
-
 
 
 # Piece images dict
@@ -160,6 +159,7 @@ trayofdead = pygame.image.load('game_img/Component 3.png').convert_alpha()
 
 # Game mode function
 def gameplay(w_player, b_player):
+    global chance
     screen.blit(plain_bg, (0, 0))
     screen.blit(chessboard, (board_x, board_y))
 
@@ -167,6 +167,12 @@ def gameplay(w_player, b_player):
     player_w_render = playername_font.render(w_player, True, (255, 255, 255))
     player_b_render = playername_font.render(b_player, True, (0, 0, 0))
 
+
+    turn_font = pygame.font.Font('fonts/InknutAntiqua-Regular.ttf', 40)
+    turn_text = turn_font.render(f"Current Turn: {chance.capitalize()}", True, (255, 255, 255))
+
+
+    screen.blit(turn_text, (800, 100))
     screen.blit(player_w_render, (90, 10))
     screen.blit(player_b_render, (1500, 10))
     screen.blit(trayofdead, (315, 200))
@@ -177,12 +183,14 @@ def state_changer():
     global state
     state = 'game'
 
+
 # The piece creator and handler
 class Piece:
-    def __init__(self, position, piece_id, image):
+    def __init__(self, position, piece_id, image, chance):
         self.pos = position
         self.piece_id = piece_id
         self.image = image
+        self.color = 'white' if piece_id[0] == 'w' else 'black'
         self.dragging = False
         self.offset_x = 0
         self.offset_y = 0
@@ -198,6 +206,11 @@ class Piece:
             screen.blit(self.image, (px, py))
 
     def handle_mouse_down(self, mouse_pos):
+        global chance
+
+        if self.color != chance:
+            return False
+
         px, py = grid_to_pixel(self.pos)
         rect = pygame.Rect(px, py, grid_size, grid_size)
         if rect.collidepoint(mouse_pos):
@@ -208,6 +221,8 @@ class Piece:
         return False
 
     def handle_mouse_up(self):
+        global chance
+
         if not self.dragging:
             return
 
@@ -217,27 +232,22 @@ class Piece:
 
         if new_grid_pos is None:
             return
+        pos = valid_pos(chance)
 
-        # Valid positions UPDATE position
-        if new_grid_pos in valid_pos:
-            # Check the value of new position and if it is a piece, color of the value
-            # Not allow piece to capture same side
-            target_piece_id = table[new_grid_pos[1]][new_grid_pos[0]]
-            if target_piece_id != '0':
-                if (self.piece_id[0] == 'w' and target_piece_id[0] == 'b') or \
-                       (self.piece_id[0] == 'b' and target_piece_id[0] == 'w'):
-                    pass
-                else:
-                    return
+        valid_position = None
+        for i in pos:
+            if i[0] == self.piece_id:
+                valid_position = i[1:]
+                break
 
-            table[old_pos[1]][old_pos[0]] = '0'
-            table[new_grid_pos[1]][new_grid_pos[0]] = self.piece_id
-            self.pos = new_grid_pos
+        if valid_position is None or new_grid_pos not in valid_position:
+            return
 
-            # Change the turn after a move
-            global chance
-            chance = 'black' if chance == 'white' else 'white'
-            chance_changer(chance, c)
+        table[old_pos[1]][old_pos[0]] = '0'
+        table[new_grid_pos[1]][new_grid_pos[0]] = self.piece_id
+        self.pos = new_grid_pos
+
+        chance = 'black' if chance == 'white' else 'white'
 
 
 pieces = []
@@ -265,14 +275,12 @@ def update_pieces_from_table():
 
     pieces.clear()
 
-
     for i in range(8):
         for j in range(8):
             piece_id = table[i][j]
             if piece_id != '0':
-
                 if piece_id in pieces_img:
-                    pieces.append(Piece((j, i), piece_id, pieces_img[piece_id]))
+                    pieces.append(Piece((j, i), piece_id, pieces_img[piece_id], chance))
                 else:
                     print(f"Warning: Unknown piece ID '{piece_id}' at position ({j}, {i})")
 
@@ -320,13 +328,11 @@ while run:
                         black_player += event.unicode
 
         elif state == 'game':
-
             if has_table_changed():
                 update_pieces_from_table()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for piece in reversed(pieces):
-
                     if piece.handle_mouse_down(event.pos):
                         dragged_piece = piece
                         pieces.remove(piece)

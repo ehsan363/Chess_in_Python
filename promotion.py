@@ -1175,8 +1175,6 @@ def validpos_filter(mode, attacker):
 
 def check_checker(s, posi):
     pos = posi
-    #log.write(f'posi,pos {posi}\n')
-    #log.flush()
     for i in range(len(table)):
         for j in range(len(table[i])):
             if  s == 'white' and table[i][j] == 'wk':
