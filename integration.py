@@ -17,8 +17,8 @@ font_start = pygame.font.Font('fonts/InknutAntiqua-Regular.ttf', 70)
 otn = font_start.render("Start", True, (255, 255, 255))
 
 font_entry = pygame.font.Font('fonts/InknutAntiqua-Regular.ttf', 50)
-entry_color_inactive = pygame.Color((139, 78, 57))
-entry_color_active = pygame.Color((103, 37, 14))
+entry_color_inactive = pygame.Color((30, 30, 30))
+entry_color_active = pygame.Color((0, 0, 0))
 w_active = False
 b_active = False
 white_player = ''
@@ -29,7 +29,7 @@ black_player_entry = pygame.Rect(1425, 500, 140, 70)
 start_button = pygame.Rect(850, 750, 260, 100)
 playername_font = pygame.font.Font(None, 50)
 playername_suface_txt = playername_font.render('Name', True, (110, 110, 111))
-covering_text = playername_font.render('Name', True, (220, 220, 220))
+covering_text = playername_font.render('Name', True, (61, 61, 61))
 
 # Chess board
 grid_size = 102
@@ -172,7 +172,7 @@ def gameplay(w_player, b_player):
     turn_text = turn_font.render(f"Current Turn: {chance.capitalize()}", True, (255, 255, 255))
 
 
-    screen.blit(turn_text, (800, 100))
+    screen.blit(turn_text, (750, 10))
     screen.blit(player_w_render, (90, 10))
     screen.blit(player_b_render, (1500, 10))
     screen.blit(trayofdead, (315, 200))
@@ -246,6 +246,17 @@ class Piece:
         table[old_pos[1]][old_pos[0]] = '0'
         table[new_grid_pos[1]][new_grid_pos[0]] = self.piece_id
         self.pos = new_grid_pos
+
+        # Promotion of piece
+        for i in range(len(table)):
+            for j in range(len(table[i])):
+                if table[i][j] != '0':
+                    if chance == 'white':
+                        if table[i][j][1] == 'p' and i == 0:
+                            print('WHITE NEEDS PROMOTION !!')
+                    elif chance == 'black':
+                        if table[i][j][1] == 'p' and i == 7:
+                            print('BLACK NEEDS PROMOTION!!')
 
         chance = 'black' if chance == 'white' else 'white'
 

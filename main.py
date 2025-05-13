@@ -1,9 +1,9 @@
 table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
-         ['0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
+         ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['0', 'bp0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
          ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -510,6 +510,7 @@ def valid_pos(chance):
     elif chance == 'black':
         for i in range(len(table)):
             for j in range(len(table[i])):
+
                 if table[i][j][0] == 'b':
                     if table[i][j][1] == 'p':
 
@@ -524,7 +525,7 @@ def valid_pos(chance):
 
                                 elif i != 1 and i != 7:
                                     if table[i + 1][j] == '0':
-                                        piece.append((j, i - 1))
+                                        piece.append((j, i + 1))
 
                                 if j != 7 and i != 7:
                                     if table[i + 1][j + 1][0] == 'w':
