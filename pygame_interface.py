@@ -1,6 +1,6 @@
 import pygame
 import sys
-from promotion import *
+from main import *
 
 pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
@@ -156,6 +156,8 @@ def dashboard():
 plain_bg = pygame.image.load('game_img/Plain Chess Dashboard.png')
 chessboard = pygame.image.load('game_img/Chess_Board 800.png').convert_alpha()
 trayofdead = pygame.image.load('game_img/Component 3.png').convert_alpha()
+promotiontray = pygame.image.load('game_img/promotion_tray.png').convert_alpha()
+
 
 # Game mode function
 def gameplay(w_player, b_player):
@@ -182,6 +184,126 @@ def gameplay(w_player, b_player):
 def state_changer():
     global state
     state = 'game'
+
+def promotion_channel(side, i, j):
+    if side == 'w':
+        if j == 0:
+            x_cord = board_x
+
+        elif j == 1:
+            x_cord = board_x + 100
+
+        elif j == 2:
+            x_cord = board_x + 202
+
+        elif j == 3:
+            x_cord = board_x + 305
+
+        elif j == 4:
+            x_cord = board_x + 406
+
+        elif j == 5:
+            x_cord = board_x + 506
+
+        elif j == 6:
+            x_cord = board_x + 608
+
+        elif j == 7:
+            x_cord = board_x + 709
+
+
+        y_cord = 300
+        promotion_cords = (x_cord, y_cord)
+        screen.blit(promotiontray, (promotion_cords))
+
+        queen_rect = pygame.Rect(x_cord + 5, y_cord + 5, 100, 100)
+        bishop_rect = pygame.Rect(x_cord + 5, y_cord + 105, 100, 100)
+        knight_rect = pygame.Rect(x_cord + 5, y_cord + 210, 100, 100)
+        rook_rect = pygame.Rect(x_cord + 5, y_cord + 315, 100, 100)
+
+        screen.blit(pieces_img['wq'], queen_rect)
+        screen.blit(pieces_img['wbl'], bishop_rect)
+        screen.blit(pieces_img['whl'], knight_rect)
+        screen.blit(pieces_img['wrl'], rook_rect)
+
+        pygame.display.update()
+
+
+    elif side == 'b':
+        if j == 0:
+            x_cord = board_x
+
+        elif j == 1:
+            x_cord = board_x + 100
+
+        elif j == 2:
+            x_cord = board_x + 202
+
+        elif j == 3:
+            x_cord = board_x + 305
+
+        elif j == 4:
+            x_cord = board_x + 406
+
+        elif j == 5:
+            x_cord = board_x + 506
+
+        elif j == 6:
+            x_cord = board_x + 608
+
+        elif j == 7:
+            x_cord = board_x + 709
+
+
+        y_cord = 500
+        promotion_cords = (x_cord, y_cord)
+        screen.blit(promotiontray, (promotion_cords))
+
+        queen_rect = pygame.Rect(x_cord + 5, y_cord + 315, 100, 100)
+        bishop_rect = pygame.Rect(x_cord + 5, y_cord + 210, 100, 100)
+        knight_rect = pygame.Rect(x_cord + 5, y_cord + 105, 100, 100)
+        rook_rect = pygame.Rect(x_cord + 5, y_cord + 5, 100, 100)
+
+        screen.blit(pieces_img['bq'], queen_rect)
+        screen.blit(pieces_img['bbl'], bishop_rect)
+        screen.blit(pieces_img['bhl'], knight_rect)
+        screen.blit(pieces_img['brl'], rook_rect)
+
+        pygame.display.update()
+
+
+    selection = True
+    while selection:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                selection = False
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print('MOUSEBUTTONDOWN')
+                pos = pygame.mouse.get_pos()
+
+                if queen_rect.collidepoint(pos):
+                    selection = False
+                    print('QUEEN SELECTED')
+                    promotion(cord_x = j, cord_y = i, p = 'q')
+
+                elif bishop_rect.collidepoint(pos):
+                    selection = False
+                    print('BISHOP SELECTED')
+                    promotion(cord_x = j, cord_y = i, p = 'b')
+
+                elif knight_rect.collidepoint(pos):
+                    selection = False
+                    print('KNIGHT SELECTED')
+                    promotion(cord_x = j, cord_y = i, p = 'k')
+
+                elif rook_rect.collidepoint(pos):
+                    selection = False
+                    print('ROOK SELECTED')
+                    promotion(cord_x = j, cord_y = i, p = 'r')
 
 
 # The piece creator and handler
@@ -254,9 +376,12 @@ class Piece:
                     if chance == 'white':
                         if table[i][j][1] == 'p' and i == 0:
                             print('WHITE NEEDS PROMOTION !!')
+
+                            promotion_channel(side = 'w', i = i, j = j)
                     elif chance == 'black':
                         if table[i][j][1] == 'p' and i == 7:
                             print('BLACK NEEDS PROMOTION!!')
+                            promotion_channel(side = 'b', i = i, j = j)
 
         chance = 'black' if chance == 'white' else 'white'
 

@@ -1,24 +1,43 @@
-table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
-         ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
+table = [['brl', '0', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
+         ['bp0', 'wp0', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
-         ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
+         ['wp0', 'bp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
+         ['wrl', '0', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
 
-def chance_changer(ch,c):
-    if ch == 'white':
-        global chance
-        chance = 'black'
-        c+=1
-    elif ch == 'black':
-        chance = 'white'
-        c+=1
-    return chance, c
+def promotion(cord_x, cord_y, p):
+    if table[cord_y][cord_x][0] == 'w':
+        if p == 'q':
+            table[cord_y][cord_x] = 'wq'
+
+        elif p == 'b':
+            table[cord_y][cord_x] = 'wbr'
+
+        elif p == 'k':
+            table[cord_y][cord_x] = 'whr'
+
+        elif p == 'r':
+            table[cord_y][cord_x] = 'wrr'
+
+    elif table[cord_y][cord_x][0] == 'b':
+        if p == 'q':
+            table[cord_y][cord_x] = 'bq'
+
+        elif p == 'b':
+            table[cord_y][cord_x] = 'bbr'
+
+        elif p == 'k':
+            table[cord_y][cord_x] = 'bhr'
+
+        elif p == 'r':
+            table[cord_y][cord_x] = 'brr'
+
+
 
 
 def distance(m, ii, jj):
