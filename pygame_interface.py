@@ -169,10 +169,8 @@ def gameplay(w_player, b_player):
     player_w_render = playername_font.render(w_player, True, (255, 255, 255))
     player_b_render = playername_font.render(b_player, True, (0, 0, 0))
 
-
     turn_font = pygame.font.Font('fonts/InknutAntiqua-Regular.ttf', 40)
     turn_text = turn_font.render(f"Current Turn: {chance.capitalize()}", True, (255, 255, 255))
-
 
     screen.blit(turn_text, (750, 10))
     screen.blit(player_w_render, (90, 10))
@@ -184,6 +182,7 @@ def gameplay(w_player, b_player):
 def state_changer():
     global state
     state = 'game'
+
 
 def promotion_channel(side, i, j):
     if side == 'w':
@@ -210,7 +209,6 @@ def promotion_channel(side, i, j):
 
         elif j == 7:
             x_cord = board_x + 709
-
 
         y_cord = 300
         promotion_cords = (x_cord, y_cord)
@@ -254,7 +252,6 @@ def promotion_channel(side, i, j):
         elif j == 7:
             x_cord = board_x + 709
 
-
         y_cord = 500
         promotion_cords = (x_cord, y_cord)
         screen.blit(promotiontray, (promotion_cords))
@@ -271,7 +268,6 @@ def promotion_channel(side, i, j):
 
         pygame.display.update()
 
-
     selection = True
     while selection:
         for event in pygame.event.get():
@@ -282,28 +278,30 @@ def promotion_channel(side, i, j):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print('MOUSEBUTTONDOWN')
                 pos = pygame.mouse.get_pos()
 
                 if queen_rect.collidepoint(pos):
                     selection = False
-                    print('QUEEN SELECTED')
-                    promotion(cord_x = j, cord_y = i, p = 'q')
+                    promotion(cord_x=j, cord_y=i, p='q')
 
                 elif bishop_rect.collidepoint(pos):
                     selection = False
-                    print('BISHOP SELECTED')
-                    promotion(cord_x = j, cord_y = i, p = 'b')
+                    promotion(cord_x=j, cord_y=i, p='b')
 
                 elif knight_rect.collidepoint(pos):
                     selection = False
-                    print('KNIGHT SELECTED')
-                    promotion(cord_x = j, cord_y = i, p = 'k')
+                    promotion(cord_x=j, cord_y=i, p='k')
 
                 elif rook_rect.collidepoint(pos):
                     selection = False
-                    print('ROOK SELECTED')
-                    promotion(cord_x = j, cord_y = i, p = 'r')
+                    promotion(cord_x=j, cord_y=i, p='r')
+
+
+dead = []
+
+
+def captured(captured_piece):
+    dead.append(captured_piece)
 
 
 # The piece creator and handler
@@ -365,9 +363,19 @@ class Piece:
         if valid_position is None or new_grid_pos not in valid_position:
             return
 
+        captured_piece = table[new_grid_pos[1]][new_grid_pos[0]]
+        if captured_piece != '0':
+            captured(captured_piece=captured_piece)
+
         table[old_pos[1]][old_pos[0]] = '0'
         table[new_grid_pos[1]][new_grid_pos[0]] = self.piece_id
         self.pos = new_grid_pos
+
+        # Force an immediate update of the pieces after a capture or move
+        update_pieces_from_table()
+
+        # Force a screen redraw
+        render_game_screen()
 
         # Promotion of piece
         for i in range(len(table)):
@@ -375,13 +383,11 @@ class Piece:
                 if table[i][j] != '0':
                     if chance == 'white':
                         if table[i][j][1] == 'p' and i == 0:
-                            print('WHITE NEEDS PROMOTION !!')
+                            promotion_channel(side='w', i=i, j=j)
 
-                            promotion_channel(side = 'w', i = i, j = j)
                     elif chance == 'black':
                         if table[i][j][1] == 'p' and i == 7:
-                            print('BLACK NEEDS PROMOTION!!')
-                            promotion_channel(side = 'b', i = i, j = j)
+                            promotion_channel(side='b', i=i, j=j)
 
         chance = 'black' if chance == 'white' else 'white'
 
@@ -419,6 +425,45 @@ def update_pieces_from_table():
                     pieces.append(Piece((j, i), piece_id, pieces_img[piece_id], chance))
                 else:
                     print(f"Warning: Unknown piece ID '{piece_id}' at position ({j}, {i})")
+
+
+def render_game_screen():
+    gameplay(white_player, black_player)
+
+    if len(dead) != 0:
+        wc = 0
+        bc = 0
+
+        for i in range(len(dead)):
+            if dead[i][0] == 'w':
+                # Calculate row and column for white pieces
+                w_row = wc % 8
+                w_col = wc // 8
+
+                if w_col == 0:
+                    wx = 435
+                else:
+                    wx = 320
+
+                screen.blit(pieces_img[dead[i]], (wx, 200 + 105 * w_row))
+                wc += 1
+            elif dead[i][0] == 'b':
+                # Calculate row and column for black pieces
+                b_row = bc % 8
+                b_col = bc // 8
+
+                if b_col == 0:
+                    bx = 1405
+                else:
+                    bx = 1520
+
+                screen.blit(pieces_img[dead[i]], (bx, 200 + 105 * b_row))
+                bc += 1
+
+    for piece in pieces:
+        piece.draw()
+
+    pygame.display.update()
 
 
 update_pieces_from_table()
@@ -484,11 +529,9 @@ while run:
     if state == 'dashboard':
         dashboard()
         clock.tick(30)
-    elif state == 'game':
-        gameplay(white_player, black_player)
 
-        for piece in pieces:
-            piece.draw()
+    elif state == 'game':
+        render_game_screen()
         clock.tick(60)
 
     pygame.display.update()
