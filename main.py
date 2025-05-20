@@ -1,41 +1,74 @@
-table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
-         ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
+table = [['brl', '0', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
+         ['bp0', 'wp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
+         ['wp0', '0', 'wp2', '0', 'wp4', 'wp5', 'wp6', 'wp7'],
          ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
 
+pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
+           ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
+           ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
+           ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
+
+def promotion_grid(function = None, oldp = None, newp = None):
+    global pos
+    if oldp != None and newp != None:
+        for i in pos:
+            if i[0] == oldp:
+                i[0] = newp
+    temp_pos = []
+
+    if function == 'reset':
+        for i in pos:
+            if len(i) == 1:
+                temp_pos.append(i)
+            elif len(i) != 1:
+                while len(i) != 1:
+                    i.pop()
+                temp_pos.append(i)
+        return temp_pos
 def promotion(cord_x, cord_y, p):
+    old_piece = table[cord_y][cord_x]
+    pawn_no = old_piece[2]
+
     if table[cord_y][cord_x][0] == 'w':
         if p == 'q':
-            table[cord_y][cord_x] = 'wq'
+            table[cord_y][cord_x] = f'wq{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'wq{pawn_no}')
 
         elif p == 'b':
-            table[cord_y][cord_x] = 'wbr'
+            table[cord_y][cord_x] = f'wbr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'wbr{pawn_no}')
 
-        elif p == 'k':
-            table[cord_y][cord_x] = 'whr'
+        elif p == 'h':
+            table[cord_y][cord_x] = f'whr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'whr{pawn_no}')
 
         elif p == 'r':
-            table[cord_y][cord_x] = 'wrr'
+            table[cord_y][cord_x] = f'wrr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'wrr{pawn_no}')
 
     elif table[cord_y][cord_x][0] == 'b':
         if p == 'q':
-            table[cord_y][cord_x] = 'bq'
+            table[cord_y][cord_x] = f'bq{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'bq{pawn_no}')
 
         elif p == 'b':
-            table[cord_y][cord_x] = 'bbr'
+            table[cord_y][cord_x] = f'bbr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'bbr{pawn_no}')
 
         elif p == 'k':
-            table[cord_y][cord_x] = 'bhr'
+            table[cord_y][cord_x] = f'bhr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'bhr{pawn_no}')
 
         elif p == 'r':
-            table[cord_y][cord_x] = 'brr'
+            table[cord_y][cord_x] = f'brr{table[cord_y][cord_x][2]}'
+            promotion_grid(function = 'change', oldp = old_piece, newp =f'brr{pawn_no}')
 
 
 
@@ -76,10 +109,7 @@ def distance(m, ii, jj):
 
 
 def valid_pos(chance):
-    pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
-           ['bp0'], ['bp1'], ['bp2'], ['bp3'], ['bp4'], ['bp5'], ['bp6'], ['bp7'],
-           ['wp0'], ['wp1'], ['wp2'], ['wp3'], ['wp4'], ['wp5'], ['wp6'], ['wp7'],
-           ['wrl'], ['whl'], ['wbl'], ['wq'], ['wk'], ['wbr'], ['whr'], ['wrr']]
+    pos = promotion_grid('reset')
     if chance == 'white':
         for i in range(len(table)):
             for j in range(len(table[i])):
@@ -109,7 +139,9 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'r':
                         if table[i][j][2] == 'r':
-                            piece = pos[31]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 7 or j != 7:
                                 pure[5] = 0
@@ -160,7 +192,9 @@ def valid_pos(chance):
                                                 break
 
                         if table[i][j][2] == 'l':
-                            piece = pos[24]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 7 or j != 0:
                                 pure[3] = 0
@@ -212,7 +246,11 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'h':
                         if table[i][j][2] == 'l':
-                            piece = pos[25]
+
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'w':
                                     piece.append((j - 1, i - 2))
@@ -239,7 +277,9 @@ def valid_pos(chance):
                                     piece.append((j - 2, i + 1))
 
                         elif table[i][j][2] == 'r':
-                            piece = pos[30]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'w':
@@ -268,7 +308,10 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'b':
                         if table[i][j][2] == 'l':
-                            piece = pos[26]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             for move in range(4):
 
                                 if move == 0:
@@ -322,7 +365,10 @@ def valid_pos(chance):
 
 
                         elif table[i][j][2] == 'r':
-                            piece = pos[29]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             for move in range(4):
 
                                 if move == 0:
@@ -374,7 +420,10 @@ def valid_pos(chance):
                                                 piece.append((j - ul, i - ul))
                                                 break
                     if table[i][j][1] == 'k':
-                        piece = pos[28]
+                        for k in range(len(pos)):
+                            if pos[k][0] == table[i][j]:
+                                piece = pos[k]
+
                         if pure[4] == 1 and pure[5] == 1:
                             if table[i][j + 1] == '0' and table[i][j + 2] == '0':
                                 av1 = 1
@@ -430,7 +479,11 @@ def valid_pos(chance):
                                 piece.append((j + 1, i))
 
                     if table[i][j][1] == 'q':
-                        piece = pos[27]
+
+                        for k in range(len(pos)):
+                            if pos[k][0] == table[i][j]:
+                                piece = pos[k]
+
                         for move in range(8):
 
                             if move == 0:
@@ -557,7 +610,9 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'r':
                         if table[i][j][2] == 'r':
-                            piece = pos[7]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 0 or j != 7:
                                 pure[0] = 0
@@ -608,7 +663,9 @@ def valid_pos(chance):
                                                 break
 
                         if table[i][j][2] == 'l':
-                            piece = pos[0]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 0 or j != 0:
                                 pure[2] = 0
@@ -660,7 +717,11 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'h':
                         if table[i][j][2] == 'l':
-                            piece = pos[1]
+
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'b':
                                     piece.append((j - 1, i - 2))
@@ -687,7 +748,9 @@ def valid_pos(chance):
                                     piece.append((j - 2, i + 1))
 
                         elif table[i][j][2] == 'r':
-                            piece = pos[6]
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
 
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'b':
@@ -716,7 +779,11 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'b':
                         if table[i][j][2] == 'l':
-                            piece = pos[2]
+
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             for move in range(4):
 
                                 if move == 0:
@@ -770,7 +837,11 @@ def valid_pos(chance):
 
 
                         elif table[i][j][2] == 'r':
-                            piece = pos[5]
+
+                            for k in range(len(pos)):
+                                if pos[k][0] == table[i][j]:
+                                    piece = pos[k]
+
                             for move in range(4):
 
                                 if move == 0:
@@ -824,7 +895,10 @@ def valid_pos(chance):
 
                     if table[i][j][1] == 'k':
 
-                        piece = pos[4]
+                        for k in range(len(pos)):
+                            if pos[k][0] == table[i][j]:
+                                piece = pos[k]
+
                         if pure[1] == 1 and pure[2] == 1:
                             if table[i][j + 1] == '0' and table[i][j + 2] == '0':
                                 av1 = 1
@@ -880,7 +954,10 @@ def valid_pos(chance):
                                 piece.append((j + 1, i))
 
                     if table[i][j][1] == 'q':
-                        piece = pos[3]
+                        for k in range(len(pos)):
+                            if pos[k][0] == table[i][j]:
+                                piece = pos[k]
+
                         for move in range(8):
 
                             if move == 0:

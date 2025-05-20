@@ -183,37 +183,37 @@ def state_changer():
     global state
     state = 'game'
 
-
 def promotion_channel(side, i, j):
+    if j == 0:
+        x_cord = board_x
+
+    elif j == 1:
+        x_cord = board_x + 100
+
+    elif j == 2:
+        x_cord = board_x + 202
+
+    elif j == 3:
+        x_cord = board_x + 305
+
+    elif j == 4:
+        x_cord = board_x + 406
+
+    elif j == 5:
+        x_cord = board_x + 506
+
+    elif j == 6:
+        x_cord = board_x + 608
+
+    elif j == 7:
+        x_cord = board_x + 709
+
+    y_cord = 100 if side == 'w' else 500
+
+    promotion_cords = (x_cord, y_cord)
+    screen.blit(promotiontray, (promotion_cords))
+
     if side == 'w':
-        if j == 0:
-            x_cord = board_x
-
-        elif j == 1:
-            x_cord = board_x + 100
-
-        elif j == 2:
-            x_cord = board_x + 202
-
-        elif j == 3:
-            x_cord = board_x + 305
-
-        elif j == 4:
-            x_cord = board_x + 406
-
-        elif j == 5:
-            x_cord = board_x + 506
-
-        elif j == 6:
-            x_cord = board_x + 608
-
-        elif j == 7:
-            x_cord = board_x + 709
-
-        y_cord = 300
-        promotion_cords = (x_cord, y_cord)
-        screen.blit(promotiontray, (promotion_cords))
-
         queen_rect = pygame.Rect(x_cord + 5, y_cord + 5, 100, 100)
         bishop_rect = pygame.Rect(x_cord + 5, y_cord + 105, 100, 100)
         knight_rect = pygame.Rect(x_cord + 5, y_cord + 210, 100, 100)
@@ -224,38 +224,8 @@ def promotion_channel(side, i, j):
         screen.blit(pieces_img['whl'], knight_rect)
         screen.blit(pieces_img['wrl'], rook_rect)
 
-        pygame.display.update()
-
 
     elif side == 'b':
-        if j == 0:
-            x_cord = board_x
-
-        elif j == 1:
-            x_cord = board_x + 100
-
-        elif j == 2:
-            x_cord = board_x + 202
-
-        elif j == 3:
-            x_cord = board_x + 305
-
-        elif j == 4:
-            x_cord = board_x + 406
-
-        elif j == 5:
-            x_cord = board_x + 506
-
-        elif j == 6:
-            x_cord = board_x + 608
-
-        elif j == 7:
-            x_cord = board_x + 709
-
-        y_cord = 500
-        promotion_cords = (x_cord, y_cord)
-        screen.blit(promotiontray, (promotion_cords))
-
         queen_rect = pygame.Rect(x_cord + 5, y_cord + 315, 100, 100)
         bishop_rect = pygame.Rect(x_cord + 5, y_cord + 210, 100, 100)
         knight_rect = pygame.Rect(x_cord + 5, y_cord + 105, 100, 100)
@@ -266,8 +236,7 @@ def promotion_channel(side, i, j):
         screen.blit(pieces_img['bhl'], knight_rect)
         screen.blit(pieces_img['brl'], rook_rect)
 
-        pygame.display.update()
-
+    pygame.display.update()
     selection = True
     while selection:
         for event in pygame.event.get():
@@ -290,7 +259,7 @@ def promotion_channel(side, i, j):
 
                 elif knight_rect.collidepoint(pos):
                     selection = False
-                    promotion(cord_x=j, cord_y=i, p='k')
+                    promotion(cord_x=j, cord_y=i, p='h')
 
                 elif rook_rect.collidepoint(pos):
                     selection = False
@@ -382,11 +351,11 @@ class Piece:
             for j in range(len(table[i])):
                 if table[i][j] != '0':
                     if chance == 'white':
-                        if table[i][j][1] == 'p' and i == 0:
+                        if table[i][j][:2] == 'wp' and i == 0:
                             promotion_channel(side='w', i=i, j=j)
 
                     elif chance == 'black':
-                        if table[i][j][1] == 'p' and i == 7:
+                        if table[i][j][:2] == 'bp' and i == 7:
                             promotion_channel(side='b', i=i, j=j)
 
         chance = 'black' if chance == 'white' else 'white'
@@ -423,6 +392,9 @@ def update_pieces_from_table():
             if piece_id != '0':
                 if piece_id in pieces_img:
                     pieces.append(Piece((j, i), piece_id, pieces_img[piece_id], chance))
+                elif piece_id[len(piece_id)-1] in list('01234567'):
+                    img_id = piece_id[:-1]
+                    pieces.append(Piece((j, i), piece_id, pieces_img[img_id], chance))
                 else:
                     print(f"Warning: Unknown piece ID '{piece_id}' at position ({j}, {i})")
 
