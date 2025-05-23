@@ -1,10 +1,10 @@
-table = [['brl', 'bhl', 'bbl', 'bq', 'bk', 'bbr', 'bhr', 'brr'],
+table = [['brl', 'bhl', 'bbl', '0', 'bk', 'bbr', 'bhr', 'brr'],
          ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', 'bq', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['wp0', 'wp1', 'wp2', 'wp3', 'wp4', 'wp5', 'wp6', 'wp7'],
+         ['wp0', 'wp1', 'wp2', '0', 'wp4', 'wp5', 'wp6', 'wp7'],
          ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
@@ -1314,7 +1314,7 @@ def validpos_filter(status, attacker):
                 for i in range(1, step+1):
                     possible_pos.append((attacker_pos[0]-i, attacker_pos[1]+i))
 
-            elif ai < ki and aj < kj:
+            elif ai > ki and aj > kj:
                 for i in range(1, step+1):
                     possible_pos.append((attacker_pos[0]-i, attacker_pos[1]-i))
 
@@ -1322,14 +1322,57 @@ def validpos_filter(status, attacker):
                 for i in range(1, step+1):
                     possible_pos.append((attacker_pos[0]+i, attacker_pos[1]-i))
 
-            elif ai > ki and aj > kj:
+            elif ai < ki and aj < kj:
                 for i in range(1, step+1):
                     possible_pos.append((attacker_pos[0]+i, attacker_pos[1]+i))
 
 
         elif attacker[1] == 'q':
-            pass
 
+            if attacker_pos[0] == king_pos[0]:
+                b_min = min((attacker_pos[1], king_pos[1]))
+                b_max = max((attacker_pos[1], king_pos[1]))
+                step = b_max - b_min - 1
+
+                for i in range(1, step + 1):
+                    possible_pos.append((attacker_pos[0], b_min + i))
+
+
+            elif attacker_pos[1] == king_pos[1]:
+                b_min = min((attacker_pos[0], king_pos[0]))
+                b_max = max((attacker_pos[0], king_pos[0]))
+                step = b_max - b_min - 1
+
+                for i in range(1, step + 1):
+                    possible_pos.append((b_min + i, attacker_pos[1]))
+
+            elif attacker_pos[0] != king_pos[0] and attacker_pos[1] != king_pos[1]:
+
+                ai = attacker_pos[1]
+                aj = attacker_pos[0]
+
+                ki = king_pos[1]
+                kj = king_pos[0]
+
+                bi = max(ai, ki)
+                si = min(ai, ki)
+                step = bi - si - 1
+
+                if ai < ki and aj > kj:
+                    for i in range(1, step + 1):
+                        possible_pos.append((attacker_pos[0] - i, attacker_pos[1] + i))
+
+                elif ai > ki and aj > kj:
+                    for i in range(1, step + 1):
+                        possible_pos.append((attacker_pos[0] - i, attacker_pos[1] - i))
+
+                elif ai > ki and aj < kj:
+                    for i in range(1, step + 1):
+                        possible_pos.append((attacker_pos[0] + i, attacker_pos[1] - i))
+
+                elif ai < ki and aj < kj:
+                    for i in range(1, step + 1):
+                        possible_pos.append((attacker_pos[0] + i, attacker_pos[1] + i))
 
         # Only possible_pos in pos
         for i in range(len(pos)):
@@ -1353,9 +1396,6 @@ def validpos_filter(status, attacker):
 
     elif len(attacker) > 1:
         return multi_attacker(status, attacker)
-
-
-log = open('log.txt', 'w')
 
 
 def check_checker(s, pos):
@@ -1387,8 +1427,3 @@ def check_checker(s, pos):
 
     elif len(attackers) > 1:
         return validpos_filter(status, attackers)
-
-a = valid_pos('white')
-for i in a:
-    if len(i) != 1:
-        print(i)
