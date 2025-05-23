@@ -1261,8 +1261,8 @@ def validpos_filter(status, attacker):
                         beam.append((j, i))
 
 
-    possible_pos = []
     def one_attacker(status, attacker):
+        possible_pos = []
         s = 'w' if attacker[0] == 'b' else 'b'
 
         for i in pos:
@@ -1279,6 +1279,7 @@ def validpos_filter(status, attacker):
                     attacker_pos = (j, i)
                     possible_pos.append(attacker_pos)
 
+
         if attacker[1] == 'r':
             if attacker_pos[0] == king_pos[0]:
                 b_min = min((attacker_pos[1], king_pos[1]))
@@ -1289,7 +1290,7 @@ def validpos_filter(status, attacker):
                     possible_pos.append((attacker_pos[0], b_min+i))
 
 
-            elif attacker[1] == king_pos[1]:
+            elif attacker_pos[1] == king_pos[1]:
                 b_min = min((attacker_pos[0], king_pos[0]))
                 b_max = max((attacker_pos[0], king_pos[0]))
                 step = b_max - b_min - 1
@@ -1297,32 +1298,48 @@ def validpos_filter(status, attacker):
                 for i in range(1, step+1):
                     possible_pos.append((b_min+i, attacker_pos[1]))
 
-            print(possible_pos)
-
-            for i in range(len(pos)):
-                if pos[i][0][0] == s:
-                    temp = []
-                    temp.append(pos[i][0])
-                    for j in range(len(pos[i])):
-                        if j != 0 and pos[i][j] in possible_pos:
-                            print('NOT!!')
-                            temp.append(pos[i][j])
-                    pos[i] = temp
-
-
-
         elif attacker[1] == 'b':
-            pass
+            ai = attacker_pos[1]
+            aj = attacker_pos[0]
+
+            ki = king_pos[1]
+            kj = king_pos[0]
+
+            bi = max(ai,ki)
+            si = min(ai,ki)
+            step = bi-si-1
+
+
+            if ai < ki and aj > kj:
+                for i in range(1, step+1):
+                    possible_pos.append((attacker_pos[0]-i, attacker_pos[1]+i))
+
+            elif ai < ki and aj < kj:
+                for i in range(1, step+1):
+                    possible_pos.append((attacker_pos[0]-i, attacker_pos[1]-i))
+
+            elif ai > ki and aj < kj:
+                for i in range(1, step+1):
+                    possible_pos.append((attacker_pos[0]+i, attacker_pos[1]-i))
+
+            elif ai > ki and aj > kj:
+                for i in range(1, step+1):
+                    possible_pos.append((attacker_pos[0]+i, attacker_pos[1]+i))
+
 
         elif attacker[1] == 'q':
             pass
 
-        elif attacker[1] in list('hkp'):
-            for i in pos:
-                if i[0][0] == s:
-                    for j in range(1,len(i)):
-                        if j not in possible_pos:
-                            i.remove(j)
+
+        # Only possible_pos in pos
+        for i in range(len(pos)):
+            if pos[i][0][0] == s:
+                temp = []
+                temp.append(pos[i][0])
+                for j in range(len(pos[i])):
+                    if j != 0 and pos[i][j] in possible_pos:
+                        temp.append(pos[i][j])
+                pos[i] = temp
 
         return pos
 
