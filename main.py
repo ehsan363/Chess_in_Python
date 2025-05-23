@@ -1374,7 +1374,6 @@ def validpos_filter(status, attacker):
                     for i in range(1, step + 1):
                         possible_pos.append((attacker_pos[0] + i, attacker_pos[1] + i))
 
-        # Only possible_pos in pos
         for i in range(len(pos)):
             if pos[i][0][0] == s:
                 temp = []
