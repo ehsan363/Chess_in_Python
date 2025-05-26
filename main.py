@@ -1,11 +1,11 @@
-table = [['brl', 'bhl', 'bbl', '0', 'bk', 'bbr', 'bhr', 'brr'],
+table = [['brl', 'bhl', '0', '0', 'bk', 'bbr', 'bhr', 'brr'],
          ['bp0', 'bp1', 'bp2', 'bp3', 'bp4', 'bp5', 'bp6', 'bp7'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
+         ['0', '0', '0', '0', 'bq', '0', '0', '0'],
+         ['0', 'bbl', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['0', 'bq', '0', '0', '0', '0', '0', '0'],
-         ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['wp0', 'wp1', 'wp2', '0', 'wp4', 'wp5', 'wp6', 'wp7'],
-         ['wrl', 'whl', 'wbl', 'wq', 'wk', 'wbr', 'whr', 'wrr']]
+         ['wp0', 'wp1', 'wp2', '0', 'whr', 'wp5', 'wp6', 'wp7'],
+         ['wrl', 'whl', 'wbl', 'wq', 'wk', '0', 'whr', 'wrr']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
@@ -1052,9 +1052,8 @@ def valid_pos(chance):
     return check_checker(chance, pos)
 
 
-def validpos_filter(status, attacker):
-    
-    def one_attacker(status, attacker):
+def validpos_filter(attacker):
+    def one_attacker(attacker):
         possible_pos = []
         s = 'w' if attacker[0] == 'b' else 'b'
 
@@ -1179,25 +1178,43 @@ def validpos_filter(status, attacker):
         return pos
 
 
-    def multi_attacker(status, attacker):
-        pass
+    def multi_attacker(attacker):
+        s = 'w' if attacker[0][0] == 'b' else 'b'
+        availabe_pos = []
+        attackerapos = []
+
+        for i in pos:
+            if i[0] == f'{s}k':
+                kingapos = i[1:len(i)]
+
+        for i in range(len(attacker)):
+            for j in pos:
+                if j[0] == attacker[i]:
+                    for r in range(len(j[1:len(j)])):
+                        attackerapos.append(j[1:len(j)][r])
+
+        if len(kingapos) != 0:
+            for i in range(len(kingapos)):
+                if kingapos[i] not in attackerapos:
+                    availabe_pos.append(kingapos[i])
+
+        return availabe_pos
+
 
     if len(attacker) == 1:
         attacker1 = attacker[0]
-        return one_attacker(status, attacker1)
+        return one_attacker(attacker1)
 
     elif len(attacker) > 1:
-        return multi_attacker(status, attacker)
+        return multi_attacker(attacker)
 
 
 def check_checker(s, pos):
     if s == 'white':
         king = 'wk'
-        status = 'wcheck'
 
     elif s == 'black':
         king = 'bk'
-        status = 'bcheck'
 
     for i in range(len(table)):
         for j in range(len(table[i])):
@@ -1210,12 +1227,12 @@ def check_checker(s, pos):
         if king_pos in i:
             attackers.append(i[0])
 
+
     if len(attackers) == 0:
         return pos
 
     elif len(attackers) == 1:
-        log.write('check 1dude')
-        return validpos_filter(status, attackers)
+        return validpos_filter(attackers)
 
     elif len(attackers) > 1:
-        return validpos_filter(status, attackers)
+        return validpos_filter(attackers)
