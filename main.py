@@ -259,25 +259,25 @@ def valid_pos(chance):
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'w':
                                     piece.append((j - 1, i - 2))
-                            if j != 0 and j != 1 and i != 0:
+                            elif j != 0 and j != 1 and i != 0:
                                 if table[i - 1][j - 2][0] != 'w':
                                     piece.append((j - 2, i - 1))
-                            if i != 0 and i != 1 and j != 7:
+                            elif i != 0 and i != 1 and j != 7:
                                 if table[i - 2][j + 1][0] != 'w':
                                     piece.append((j + 1, i - 2))
-                            if j != 7 and j != 6 and i != 0:
+                            elif j != 7 and j != 6 and i != 0:
                                 if table[i - 1][j + 2][0] != 'w':
                                     piece.append((j + 2, i - 1))
-                            if i != 7 and i != 6 and j != 7:
+                            elif i != 7 and i != 6 and j != 7:
                                 if table[i + 2][j + 1][0] != 'w':
                                     piece.append((j + 1, i + 2))
-                            if j != 7 and j != 6 and i != 7:
+                            elif j != 7 and j != 6 and i != 7:
                                 if table[i + 1][j + 2][0] != 'w':
                                     piece.append((j + 2, i + 1))
-                            if i != 7 and i != 6 and j != 0:
+                            elif i != 7 and i != 6 and j != 0:
                                 if table[i + 2][j - 1][0] != 'w':
                                     piece.append((j - 1, i + 2))
-                            if j != 0 and j != 1 and i != 7:
+                            elif j != 0 and j != 1 and i != 7:
                                 if table[i + 1][j - 2][0] != 'w':
                                     piece.append((j - 2, i + 1))
 
@@ -289,25 +289,25 @@ def valid_pos(chance):
                             if i != 0 and i != 1 and j != 0:
                                 if table[i - 2][j - 1][0] != 'w':
                                     piece.append((j - 1, i - 2))
-                            if j != 0 and j != 1 and i != 0:
+                            elif j != 0 and j != 1 and i != 0:
                                 if table[i - 1][j - 2][0] != 'w':
                                     piece.append((j - 2, i - 1))
-                            if i != 0 and i != 1 and j != 7:
+                            elif i != 0 and i != 1 and j != 7:
                                 if table[i - 2][j + 1][0] != 'w':
                                     piece.append((j + 1, i - 2))
-                            if j != 7 and j != 6 and i != 0:
+                            elif j != 7 and j != 6 and i != 0:
                                 if table[i - 1][j + 2][0] != 'w':
                                     piece.append((j + 2, i - 1))
-                            if i != 7 and i != 6 and j != 7:
+                            elif i != 7 and i != 6 and j != 7:
                                 if table[i + 2][j + 1][0] != 'w':
                                     piece.append((j + 1, i + 2))
-                            if j != 7 and j != 6 and i != 7:
+                            elif j != 7 and j != 6 and i != 7:
                                 if table[i + 1][j + 2][0] != 'w':
                                     piece.append((j + 2, i + 1))
-                            if i != 7 and i != 6 and j != 0:
+                            elif i != 7 and i != 6 and j != 0:
                                 if table[i + 2][j - 1][0] != 'w':
                                     piece.append((j - 1, i + 2))
-                            if j != 0 and j != 1 and i != 7:
+                            elif j != 0 and j != 1 and i != 7:
                                 if table[i + 1][j - 2][0] != 'w':
                                     piece.append((j - 2, i + 1))
 
@@ -720,31 +720,32 @@ def valid_pos(chance):
                             if table[i][j][2] == 'l':
 
                                 for k in range(len(pos)):
-                                    if pos[k][0] == table[i][j]:
+
+                                    if pos[k][0] == table[i][j][:len(table[i][j])-1]:
                                         piece = pos[k]
 
                                 if i != 0 and i != 1 and j != 0:
                                     if table[i - 2][j - 1][0] != 'b':
                                         piece.append((j - 1, i - 2))
-                                if j != 0 and j != 1 and i != 0:
+                                elif j != 0 and j != 1 and i != 0:
                                     if table[i - 1][j - 2][0] != 'b':
                                         piece.append((j - 2, i - 1))
-                                if i != 0 and i != 1 and j != 7:
+                                elif i != 0 and i != 1 and j != 7:
                                     if table[i - 2][j + 1][0] != 'b':
                                         piece.append((j + 1, i - 2))
-                                if j != 7 and j != 6 and i != 0:
+                                elif j != 7 and j != 6 and i != 0:
                                     if table[i - 1][j + 2][0] != 'b':
                                         piece.append((j + 2, i - 1))
-                                if i != 7 and i != 6 and j != 7:
+                                elif i != 7 and i != 6 and j != 7:
                                     if table[i + 2][j + 1][0] != 'b':
                                         piece.append((j + 1, i + 2))
-                                if j != 7 and j != 6 and i != 7:
+                                elif j != 7 and j != 6 and i != 7:
                                     if table[i + 1][j + 2][0] != 'b':
                                         piece.append((j + 2, i + 1))
-                                if i != 7 and i != 6 and j != 0:
+                                elif i != 7 and i != 6 and j != 0:
                                     if table[i + 2][j - 1][0] != 'b':
                                         piece.append((j - 1, i + 2))
-                                if j != 0 and j != 1 and i != 7:
+                                elif j != 0 and j != 1 and i != 7:
                                     if table[i + 1][j - 2][0] != 'b':
                                         piece.append((j - 2, i + 1))
 
@@ -756,25 +757,25 @@ def valid_pos(chance):
                                 if i != 0 and i != 1 and j != 0:
                                     if table[i - 2][j - 1][0] != 'b':
                                         piece.append((j - 1, i - 2))
-                                if j != 0 and j != 1 and i != 0:
+                                elif j != 0 and j != 1 and i != 0:
                                     if table[i - 1][j - 2][0] != 'b':
                                         piece.append((j - 2, i - 1))
-                                if i != 0 and i != 1 and j != 7:
+                                elif i != 0 and i != 1 and j != 7:
                                     if table[i - 2][j + 1][0] != 'b':
                                         piece.append((j + 1, i - 2))
-                                if j != 7 and j != 6 and i != 0:
+                                elif j != 7 and j != 6 and i != 0:
                                     if table[i - 1][j + 2][0] != 'b':
                                         piece.append((j + 2, i - 1))
-                                if i != 7 and i != 6 and j != 7:
+                                elif i != 7 and i != 6 and j != 7:
                                     if table[i + 2][j + 1][0] != 'b':
                                         piece.append((j + 1, i + 2))
-                                if j != 7 and j != 6 and i != 7:
+                                elif j != 7 and j != 6 and i != 7:
                                     if table[i + 1][j + 2][0] != 'b':
                                         piece.append((j + 2, i + 1))
-                                if i != 7 and i != 6 and j != 0:
+                                elif i != 7 and i != 6 and j != 0:
                                     if table[i + 2][j - 1][0] != 'b':
                                         piece.append((j - 1, i + 2))
-                                if j != 0 and j != 1 and i != 7:
+                                elif j != 0 and j != 1 and i != 7:
                                     if table[i + 1][j - 2][0] != 'b':
                                         piece.append((j - 2, i + 1))
 
