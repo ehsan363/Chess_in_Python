@@ -3,14 +3,12 @@ table = [['brl0', 'bhl0', 'bbl0', 'bq0', 'bk', 'bbr0', 'bhr0', 'brr0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
          ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['0', '0', '0', '0', '0', '0', '0', '0'],
-         ['wp00', 'wp10', 'wp20', 'wp30', 'wp40', 'wp50', 'wp60', 'wp70'],
+         ['0', '0', '0', '0', 'wp40', '0', '0', '0'],
+         ['wp00', 'wp10', 'wp20', 'wp30', '0', 'wp50', 'wp60', 'wp70'],
          ['wrl0', 'whl0', 'wbl0', 'wq0', 'wk', 'wbr0', 'whr0', 'wrr0']]
 one = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 pure = [1, 1, 1, 1, 1, 1]
 c = 1
-
-log = open('log.txt','w')
 
 
 pos = [['brl'], ['bhl'], ['bbl'], ['bq'], ['bk'], ['bbr'], ['bhr'], ['brr'],
@@ -348,7 +346,7 @@ def valid_pos(chance):
                                                 break
                     elif table[i][j][1] == 'k':
                         for k in range(len(pos)):
-                            if pos[k][0] == table[i][j][:len(table[i][j])-1]:
+                            if pos[k][0] == table[i][j]:
                                 piece = pos[k]
 
                         if pure[4] == 1 and pure[5] == 1:
@@ -404,6 +402,7 @@ def valid_pos(chance):
                         if j != 7:
                             if table[i][j + 1][0] != 'w':
                                 piece.append((j + 1, i))
+
 
                     elif table[i][j][1] == 'q':
 
@@ -715,9 +714,11 @@ def valid_pos(chance):
                                             elif table[i - ul][j - ul][0] == 'w':
                                                 piece.append((j - ul, i - ul))
                                                 break
+
                     elif table[i][j][1] == 'k':
+
                         for k in range(len(pos)):
-                            if pos[k][0] == table[i][j][:len(table[i][j])-1]:
+                            if pos[k][0] == table[i][j]:
                                 piece = pos[k]
                         if pure[1] == 1 and pure[2] == 1:
                             if table[i][j + 1] == '0' and table[i][j + 2] == '0':
@@ -1046,3 +1047,8 @@ def check_checker(s, pos):
 
     elif len(attackers) > 1:
         return validpos_filter(attackers)
+
+a = valid_pos('white')
+for i in a:
+    if len(i)!=1:
+        print(i)

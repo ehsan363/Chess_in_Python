@@ -390,7 +390,7 @@ def update_pieces_from_table():
         for j in range(8):
             piece_id = table[i][j]
             if piece_id != '0':
-                if piece_id[1] != 'k':
+                if piece_id[1] != 'k' and len(piece_id) != 3:
                     piece_id = piece_id[:-1]
                 if piece_id in pieces_img:
                     pieces.append(Piece((j, i), piece_id, pieces_img[piece_id], chance))
