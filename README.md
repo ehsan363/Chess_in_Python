@@ -3,7 +3,8 @@
 This is a game of chess made entirely using Python and the module pygame.
 
 # This Project is STILL UNDER WORK!  ![Static Badge](https://img.shields.io/badge/under--work-work)
-
+## Currently Under Some Major Contruction
+#
 ## Files and Folders
 - **main.py**: Handles the backend of the game.
 - **pygame_interface.py**: Handles all the things made using Pygame.
